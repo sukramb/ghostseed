@@ -1,0 +1,65 @@
+# Cursor Rules for Ghostseed
+
+These rules guide code generation, reviews, and edits in this repo. Favor clarity, security, and maintainability. Keep changes small and reversible.
+
+## General
+- Write readable, explicit code with descriptive names. Prefer pure functions and early returns.
+- Strong typing when available (TypeScript/Python type hints). Avoid `any` and unsafe casts.
+- No secrets in code or logs. Use environment variables and platform secret managers.
+- Keep PRs focused (one logical change). Add/adjust tests with any behavior change.
+- English for code, comments, commits, and docs.
+
+## Security (always-on)
+- Validate and sanitize all untrusted input at boundaries (HTTP, webhooks, jobs). Use schemas (Zod/Pydantic) and fail closed.
+- Enforce authentication and authorization on every sensitive operation. Check ownership/tenant on every DB query and route.
+- Default-deny CORS. Allow only required origins, headers, and methods.
+- Use HTTPS everywhere. For payments or retries, use idempotency keys.
+- Rate limit login, signup, password reset, payment, and other sensitive endpoints.
+- Structured logs; never log PII, secrets, tokens, or raw responses from payment providers.
+- Do not store payment card data. Use Stripe/Mollie tokens and verify webhooks.
+- Protect against XSS: escape/encode user data, avoid `dangerouslySetInnerHTML`, use CSP and SRI where feasible.
+- Protect against CSRF (if cookie-based auth): same-site, csrf tokens, httpOnly cookies.
+- Avoid SSRF: never fetch arbitrary URLs from user input; use allowlists.
+- Avoid insecure crypto: never roll your own. Use well-vetted libs and algorithms.
+
+## SaaS & Architecture
+- Feature flags for risky or long-running changes. Ship iteratively.
+- Zero-downtime migrations: additive first, backfill via jobs, then switch reads/writes.
+- Idempotent handlers for webhooks and payment-affecting operations.
+- Background jobs for slow work (emails, backfills, reconciliations).
+- Multi-tenancy: scope by tenant ID on every read/write. No cross-tenant data leaks.
+- Observability: structured logs with request/trace IDs; basic metrics; optional tracing.
+
+## API & Contracts
+- Document endpoints via OpenAPI/JSON Schema when adding public APIs.
+- Validate all inputs/outputs against schemas. Provide helpful error messages without leaking internals.
+- Version APIs; do not break clients without a migration path.
+
+## Data & Privacy
+- Minimize PII. Encrypt in transit and at rest (use cloud defaults). Define retention and deletion policies.
+- Prefer soft deletes for user-facing data; hard-delete only with policy and irreversible intent.
+
+## Testing
+- Favor unit tests for logic, integration tests for boundaries, and selective e2e for critical flows.
+- Tests must be deterministic, isolated, and fast. Mock external services or use sandbox.
+
+## Git & PRs
+- Branch from `main` using `feature/<topic>` or `fix/<topic>`.
+- Conventional Commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `build:`, `ci:`
+- PR description must include: problem, solution, tests, risks, and screenshots if UI.
+
+## Dependencies
+- Keep dependencies minimal and vetted. Pin versions via lockfiles. Remove unused deps.
+- Run vulnerability scans; patch Critical/High promptly.
+
+## Prohibited Patterns
+- `eval`, dynamic `Function`, insecure deserialization, raw string-concatenated SQL, storing plaintext secrets or tokens, committing credentials.
+- Logging or returning stack traces and internal identifiers to clients.
+
+## Frontend specifics (if applicable)
+- Escape/encode all user content. Use component-level boundaries and suspense wisely.
+- Avoid storing sensitive data in `localStorage`. Prefer httpOnly cookies for sessions.
+
+## Docs & Examples
+- Update `README.md` and related docs with new commands, env vars, and flows.
+- Provide minimal examples/tests for new modules/components.

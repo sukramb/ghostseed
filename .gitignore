@@ -1,0 +1,53 @@
+# OS
+.DS_Store
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node / JS
+node_modules/
+dist/
+build/
+.next/
+.vercel/
+.turbo/
+.cache/
+coverage/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.python-version
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage*
+htmlcov/
+
+# Databases & local data
+*.sqlite
+*.db
+pgdata/
+
+# IDEs & editors
+.idea/
+.vscode/
+.history/
+
+# Misc
+*.swp
+*.swo

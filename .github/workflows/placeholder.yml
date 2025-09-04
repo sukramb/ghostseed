@@ -1,0 +1,16 @@
+name: ci-placeholder
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Placeholder
+        run: echo "CI will run lint, typecheck, test, and build once tooling is added."
