@@ -1,6 +1,3 @@
-import { StackHandler } from "@stackframe/stack";
-import { stackServerApp } from "@/stack";
-
 export default function Handler() {
   return (
     <div className="p-6">
