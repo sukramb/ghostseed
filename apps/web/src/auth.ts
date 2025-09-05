@@ -13,8 +13,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     EmailProvider({
       sendVerificationRequest: async ({ identifier, url }) => {
         const resend = new Resend(process.env.RESEND_API_KEY);
+        const from = process.env.RESEND_FROM || "Ghostseed <noreply@ghostseed.app>";
         await resend.emails.send({
-          from: "Ghostseed <noreply@ghostseed.app>",
+          from,
           to: identifier,
           subject: "Your sign-in link",
           html: `<p>Sign in to Ghostseed: <a href="${url}">Click here</a></p>`,
