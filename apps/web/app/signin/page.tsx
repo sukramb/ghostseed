@@ -7,15 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Label } from "@radix-ui/react-label";
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
   return (
     <div className="container max-w-md py-16">
       <Card className="p-6">
-        <h1 className="text-2xl font-semibold">Sign in</h1>
-        <p className="text-muted-foreground mt-1">Continue with a magic link sent to your email.</p>
+        <h1 className="text-2xl font-semibold">Sign up</h1>
+        <p className="text-muted-foreground mt-1">We’ll email you a magic link to get started.</p>
 
         {!sent ? (
           <form

@@ -9,7 +9,7 @@ export default auth(async (req) => {
   const isSignedIn = !!req.auth;
 
   if (!isSignedIn && (isDashboard || isOnboarding)) {
-    const url = new URL("/signin", nextUrl);
+    const url = new URL("/signup", nextUrl);
     url.searchParams.set("callbackUrl", nextUrl.pathname);
     return NextResponse.redirect(url);
   }
