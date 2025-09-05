@@ -1,6 +1,9 @@
 import { FeatureGrid } from "@/components/features";
 import { Hero } from "@/components/hero";
 import { PricingGrid } from "@/components/pricing";
+import { HowItWorks } from "@/components/how-it-works";
+import { InvestorsStartups } from "@/components/investors-startups";
+import { ComparisonTable } from "@/components/comparison-table";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { ComponentIcon, Users } from "lucide-react";
 
@@ -9,7 +12,7 @@ export default async function IndexPage() {
     <>
       <Hero
         capsuleText="Pre‑Pre‑Seed Funding"
-        capsuleLink="#features"
+        capsuleLink="#how-it-works"
         title="Ghostseed: Ultra‑early Support for Founders"
         subtitle="List your startup, offer virtual shares, and share revenue as yearly credits. Supporters back you early and can later cash out, trade, or redeem perks."
         primaryCtaText="Start your project"
@@ -72,6 +75,10 @@ export default async function IndexPage() {
           },
         ]}
       />
+
+      <InvestorsStartups />
+      <HowItWorks />
+      <ComparisonTable />
 
       <div id="pricing" />
       <PricingGrid
