@@ -4,7 +4,6 @@ import { PricingGrid } from "@/components/pricing";
 import { HowItWorks } from "@/components/how-it-works";
 import { InvestorsStartups } from "@/components/investors-startups";
 import { ComparisonTable } from "@/components/comparison-table";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { ComponentIcon, Users } from "lucide-react";
 
 export default async function IndexPage() {
@@ -15,10 +14,10 @@ export default async function IndexPage() {
         capsuleLink="#how-it-works"
         title="Ghostseed: Ultra‑early Support for Founders"
         subtitle="List your startup, offer virtual shares, and share revenue as yearly credits. Supporters back you early and can later cash out, trade, or redeem perks."
-        primaryCtaText="Start your project"
+        primaryCtaText="Start investing"
         primaryCtaLink="/dashboard"
-        secondaryCtaText="View on GitHub"
-        secondaryCtaLink="https://github.com/markus/ghostseed"
+        secondaryCtaText="Raise money"
+        secondaryCtaLink="/dashboard"
         credits={
           <>
             Built for community‑driven, low‑barrier startup funding.
