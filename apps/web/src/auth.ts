@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import EmailProvider from "next-auth/providers/email";
-import { Resend } from "resend";
+import Credentials from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -10,22 +10,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
   providers: [
-    EmailProvider({
-      sendVerificationRequest: async ({ identifier, url }) => {
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        const from = process.env.RESEND_FROM || "Ghostseed <noreply@ghostseed.app>";
-        await resend.emails.send({
-          from,
-          to: identifier,
-          subject: "Your sign-in link",
-          html: `<p>Sign in to Ghostseed: <a href="${url}">Click here</a></p>`,
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        identifier: { label: "Email or Username", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize: async (creds) => {
+        if (!creds?.identifier || !creds?.password) return null;
+        const identifier = String(creds.identifier).toLowerCase();
+        const user = await prisma.user.findFirst({
+          where: {
+            OR: [
+              { email: identifier },
+              { username: identifier },
+            ],
+          },
         });
+        if (!user?.passwordHash) return null;
+        const ok = await bcrypt.compare(String(creds.password), user.passwordHash);
+        if (!ok) return null;
+        return { id: user.id, name: user.name ?? user.username ?? undefined, email: user.email ?? undefined } as any;
       },
     }),
   ],
   pages: {
-    signIn: "/signup",
-    verifyRequest: "/verify",
+    signIn: "/login",
   },
   callbacks: {
     session: async ({ session, user }) => {
