@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read/write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Teams: members can read, founders can write
+    match /teams/{teamId} {
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/teams/$(teamId)/members/$(request.auth.uid));
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/teams/$(teamId)/members/$(request.auth.uid)).data.role == 'founder';
+    }
+    
+    // Team members
+    match /teams/{teamId}/members/{userId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == userId || 
+         exists(/databases/$(database)/documents/teams/$(teamId)/members/$(request.auth.uid)));
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/teams/$(teamId)/members/$(request.auth.uid)).data.role in ['founder', 'admin'];
+    }
+    
+    // Projects: public read for non-stealth, team members can read all, founders can write
+    match /projects/{projectId} {
+      allow read: if resource.data.isStealth == false || 
+        (request.auth != null && 
+         exists(/databases/$(database)/documents/teams/$(resource.data.teamId)/members/$(request.auth.uid)));
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/teams/$(resource.data.teamId)/members/$(request.auth.uid)).data.role == 'founder';
+    }
+  }
+}
