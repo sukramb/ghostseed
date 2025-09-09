@@ -79,3 +79,30 @@ model TeamMember {
 
   @@unique([teamId, userId])
 }
+
+model Project {
+  id              String   @id @default(cuid())
+  teamId          String
+  name            String
+  description     String
+  isStealth       Boolean  @default(false)
+  revenueSharePct Float
+
+  shares          Share[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model Share {
+  id          String   @id @default(cuid())
+  projectId   String
+  priceCents  Int
+  maxAmount   Int
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
